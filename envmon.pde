@@ -15,7 +15,9 @@ Arduino arduino;
     int averageCounter = (int) 0;
     
     int updating = 0;
+    int xPos = 1;                     // horizontal position of the graph
     int xPosOld = 0;
+    int xAvPos = 0;                   // horizontal position of average line
     int xAvPosOld = 0;
     float yPos1 = 0;
     float yPos3 = 0;
@@ -23,7 +25,7 @@ Arduino arduino;
     float yPosOld1 = 0;
     float yPosOld3 = 0;
     float yPosOld4 = 0;
-    int xPos = 1;         // horizontal position of the graph
+         
     
 
 
@@ -43,6 +45,7 @@ void setup(){
     dOut.addData(3,"temp, air, outside temp");
     dOut.addData(4,"empty");
     dOut.addData(5,"empty");
+    dOut.addData(6, "pool, pooltemp, water");
     
     arduino = new Arduino(this, Arduino.list()[0], 57600);  //9600
     // serial.bufferUntil('\n');
@@ -102,7 +105,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
  line(xPos, height, xPos, height - (realValues[1] * 4 + 50 ) );       // inside Temp
 
  stroke(150,140,255);
- line(xPos, height, xPos, height - (realValues[3] * 14  + 150 ) );    // outside Temp
+ line(xPos, height, xPos, height - (realValues[3] * 14  + 160 ) );    // outside Temp
  
  stroke(200,200,200);
  line(xPos, height, xPos, height - sensorValues[0]);                  // light
@@ -111,27 +114,35 @@ for (int i = 0; i < 6; i++)                                  // sum them up
  //                                                  ------   draw the average-lines
  
  if (updating == 1) {
-  
-      stroke(255,255,255);
-     yPos4 = (averageValues[4] * 4 + 50 );
-     line(xAvPosOld, height - yPosOld4, (xPos + xPosOld)/2 , height - yPos4);   // pool
-     fill(255,255,255); text(averageValues[4], (xPos + xPosOld)/2 - 25 , height- yPos4 - 5);
+
+     xAvPos = ( (xPos + xPosOld) / 2);
+   
+     yPos4 = (averageValues[4] * 4 + 50 );  
+     stroke(255,255,255);
+     line(xAvPosOld, height - yPosOld4, xAvPos , height - yPos4);   // pool
+     line(xAvPos, height, xAvPos, height - yPos4 );
+     fill(255,255,255); 
+     text(averageValues[4], xAvPos - 25 , height- yPos4 - 5);
      yPosOld4 = yPos4 ; 
- 
-     stroke(20,0,0);
+
      yPos1 = (averageValues[1] * 4 + 50 );
-     line(xAvPosOld, height - yPosOld1, (xPos + xPosOld)/2 , height - yPos1);    // inside
-     fill(0,0,0); text(averageValues[1], (xPos + xPosOld)/2 - 25 , height- yPos1 - 5); 
+     stroke(20,0,0);
+     line(xAvPosOld, height - yPosOld1, xAvPos , height - yPos1);    // inside
+     line(xAvPos, height, xAvPos, height - yPos1 );
+     fill(0,0,0); 
+     text(averageValues[1], xAvPos - 25 , height- yPos1 - 5); 
      yPosOld1 = yPos1;
-     
+
+     yPos3 = (averageValues[3] * 14 + 160 );     
      stroke(255,120,0);
-     yPos3 = (averageValues[3] * 14 + 150 );
-     line(xAvPosOld, height - yPosOld3, (xPos + xPosOld)/2 , height - yPos3);     // ouside
-     fill(255,120,0); text(averageValues[3], (xPos + xPosOld)/2 - 25 , height- yPos3 - 5);
+     line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);     // ouside
+     line(xAvPos, height, xAvPos, height - yPos3 );
+     fill(255,120,0); 
+     text(averageValues[3], xAvPos - 25 , height- yPos3 - 5);
      yPosOld3 = yPos3 ;
-       
-          
-     xAvPosOld = (xPos + xPosOld)/2;
+
+
+     xAvPosOld = xAvPos;
      xPosOld = xPos;
 
      }
@@ -167,6 +178,7 @@ updating = 0;
         dOut.update(3, averageValues[3]);
         dOut.update(4, averageValues[4]);
 //        dOut.update(5, averageValues[5]);
+        dOut.update(6, averageValues[4]);
 
 // reset variables
         averageCounter = 0;
