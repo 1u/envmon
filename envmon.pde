@@ -112,7 +112,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
  line(xPos, height, xPos, height - (realValues[1] * 4 + 50 ) );       // inside Temp
 
  stroke(150,140,255);
-  line(xPos, height, xPos, height - (realValues[3] * 14  - 160 ) );    // outside Temp
+  line(xPos, height, xPos, height - (realValues[3] * 14  - 020 ) );    // outside Temp
 // line(xPos, height, xPos, height - (realValues[3] * 32  + yOffset3 ) ); 
  
  stroke(200,200,200);
@@ -144,13 +144,13 @@ for (int i = 0; i < 6; i++)                                  // sum them up
      text(averageValues[1], xAvPos - 25 , height- (yPos1 + 5) ); 
      yPosOld1 = yPos1;
 
-     yPos3 = (averageValues[3] * 14 - 160 );                                       // ouside
+     yPos3 = (averageValues[3] * 14 - 020 );                                       // ouside
 //     yPos3 = (averageValues[3] * 32 + yOffset3 ); 
      stroke(255,120,0);
      line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);
      line(xAvPos, height -yPos3 + 4 , xAvPos, height - yPos3 - 3 );
      stroke(100,110,255);
-     line(xPos, height, xPos, height - (realValues[3] * 32  + yOffset3 ) );
+     line(xPos, height, xPos, height - (realValues[3] * 14 - 020 ) );     //? offset
      fill(255,120,0); 
      text(averageValues[3], xAvPos - 25 , height- (yPos3 + 15) );
      yPosOld3 = yPos3 ;
