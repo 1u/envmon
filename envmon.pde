@@ -26,7 +26,7 @@ Arduino arduino;
     float yPosOld3 = 70;
     float yPosOld4 = 168;
     float yOffset3 = 0;
-         
+    int y,mo,d,h,m,s;
     
 
 
@@ -204,8 +204,8 @@ averageValues[5] = 0 ;
         int response = dOut.updatePachube();                                     // updatePachube() updates by an authenticated PUT HTTP request
         if ((response) == 200){
 
-          int s = second(); int m = minute(); int h = hour(); int d = day(); int mo = month(); int y = year();
-          println("   Feed updated sucessfully    ___"+d+"."+mo+"."+y+"  at "+h+":"+m+":"+s+"___");
+          s = second(); m = minute(); h = hour(); d = day(); mo = month(); y = year();
+          println("   -> Feed updated sucessfully     "+d+"."+mo+"."+y+" at "+h+":"+m+":"+s+".");
           arduino.digitalWrite(8, arduino.HIGH);
           delay(50);
           arduino.digitalWrite(8, arduino.LOW);
@@ -215,8 +215,9 @@ averageValues[5] = 0 ;
             else if ((response) == 404){
               println("Update failed: feed doesn't exist");}
               else if ((response) == 999){
-                println("Update failed: no Internet connection?");
-                println("Last sucessful update on XXXXX" );}
+                println("Update failed: Internet connection down?  Last sucessful update was on "+d+"."+mo+"."+y+" at "+h+":"+m+":"+s+"." );
+                arduino.digitalWrite(8, arduino.HIGH);
+              }
                 else {
                   println("Update failed: unknown error nr."+response+"...");}
 
