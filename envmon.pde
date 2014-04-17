@@ -44,7 +44,7 @@ void setup(){
     dOut.addData(2,"temp, air, heater temp");
     dOut.addData(3,"temp, air, outside temp");
     dOut.addData(4,"empty");
-    dOut.addData(5,);
+    dOut.addData(5, "");
     dOut.addData(6, "pool, pooltemp, water");
     
     arduino = new Arduino(this, Arduino.list()[0], 57600);  //9600
@@ -58,7 +58,9 @@ void setup(){
     arduino.pinMode(8, Arduino.OUTPUT);
     
 
-      size(640, 300);                                       // set the window size:
+      size(640, 200);                                       // set the window size:
+//      size (3840, 300);
+//      size (320, 150);
       background(0);
 }
 
@@ -86,7 +88,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
   
 //   System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
   arduino.digitalWrite(9, arduino.LOW);
-  delay(100);
+  delay(200);                                                 // How often it's gonna be mesured
   arduino.digitalWrite(9, arduino.HIGH);                      // blink once for every data-block
   delay(50);
 }
@@ -99,13 +101,14 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 //                                                   ------   realTime values                        
 
   stroke(140,240,240);
- line(xPos, height, xPos, height - (realValues[4] * 4 + 50 ) );       // pool Temp
+ line(xPos, height, xPos, height - (realValues[4] * 4 + 20 ) );       // pool Temp
 
  stroke(100,30,20);
  line(xPos, height, xPos, height - (realValues[1] * 4 + 50 ) );       // inside Temp
 
  stroke(150,140,255);
- line(xPos, height, xPos, height - (realValues[3] * 14  + 220 ) );    // outside Temp
+ // line(xPos, height, xPos, height - (realValues[3] * 14  + 220 ) );    // outside Temp
+ line(xPos, height, xPos, height - (realValues[3] * 32  + 470 ) ); 
  
  stroke(200,200,200);
  line(xPos, height, xPos, height - sensorValues[0]);                  // light
@@ -114,31 +117,37 @@ for (int i = 0; i < 6; i++)                                  // sum them up
  //                                                  ------   draw the average-lines
  
  if (updating == 1) {
-
      xAvPos = ( (xPos + xPosOld) / 2);
    
-     yPos4 = (averageValues[4] * 4 + 50 );  
+     yPos4 = (averageValues[4] * 4 + 20 );                                   // pool
      stroke(255,255,255);
-     line(xAvPosOld, height - yPosOld4, xAvPos , height - yPos4);   // pool
-     line(xAvPos, height, xAvPos, height - yPos4 );
+     line(xAvPosOld, height - yPosOld4, xAvPos , height - yPos4);    //connectionline
+     line(xAvPos, height -yPos4 + 4 , xAvPos, height - yPos4 - 3 );  // vertical PointLine
+     stroke(120,210,210);
+     line(xPos, height, xPos, height - (realValues[4] * 4  + 20 ) );  //darker vertical Line
      fill(255,255,255); 
-     text(averageValues[4], xAvPos - 25 , height- yPos4 - 5);
+     text(averageValues[4], xAvPos - 25 , height- (yPos4 + 5) );
      yPosOld4 = yPos4 ; 
 
-     yPos1 = (averageValues[1] * 4 + 50 );
+     yPos1 = (averageValues[1] * 4 + 50 );                                      // inside
      stroke(20,0,0);
-     line(xAvPosOld, height - yPosOld1, xAvPos , height - yPos1);    // inside
-     line(xAvPos, height, xAvPos, height - yPos1 );
+     line(xAvPosOld, height - yPosOld1, xAvPos , height - yPos1);
+     line(xAvPos, height -yPos1 + 4 , xAvPos, height - yPos1 - 3 );
+     stroke(80,10,5);
+     line(xPos, height, xPos, height - (realValues[1] * 4  + 50 ) );
      fill(0,0,0); 
-     text(averageValues[1], xAvPos - 25 , height- yPos1 - 5); 
+     text(averageValues[1], xAvPos - 25 , height- (yPos1 + 5) ); 
      yPosOld1 = yPos1;
 
-     yPos3 = (averageValues[3] * 14 + 220 );     
+//     yPos3 = (averageValues[3] * 14 + 220 );                                       // ouside
+     yPos3 = (averageValues[3] * 32 + 470 ); 
      stroke(255,120,0);
-     line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);     // ouside
-     line(xAvPos, height, xAvPos, height - yPos3 );
+     line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);
+     line(xAvPos, height -yPos3 + 4 , xAvPos, height - yPos3 - 3 );
+     stroke(100,110,255);
+     line(xPos, height, xPos, height - (realValues[3] * 32  + 470 ) );
      fill(255,120,0); 
-     text(averageValues[3], xAvPos - 25 , height- yPos3 - 5);
+     text(averageValues[3], xAvPos - 25 , height- (yPos3 + 15) );
      yPosOld3 = yPos3 ;
 
 
@@ -157,11 +166,11 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
 
 
-// -----------------update Pachube once every 10 seconds (could also be e.g. every mouseClick)--------------------
+// -----------------update Pachube once every 20 seconds (could also be e.g. every mouseClick)--------------------
 
 
 updating = 0;
-    if ((millis() - lastUpdate) > 10000){
+    if ((millis() - lastUpdate) > 20000){
         updating = 1;
         for (int i = 0; i < 6; i++)
           averageValues[i]= (sumValues[i] / (averageCounter) );                  // make average
@@ -170,6 +179,8 @@ updating = 0;
         for (int i = 0; i < 6; i++)
           averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;        // round the Value to 2 floatingpoints
 
+averageValues[5] = 0 ;
+
         println(" ready to POST average of "+averageCounter+" averaged values  "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+"   ...");
 
         dOut.update(0, averageValues[0]);                                        // update the datastream
@@ -177,7 +188,7 @@ updating = 0;
         dOut.update(2, averageValues[2]);
         dOut.update(3, averageValues[3]);
         dOut.update(4, averageValues[4]);
-//        dOut.update(5, averageValues[5]);
+        dOut.update(5, averageValues[5]);
         dOut.update(6, averageValues[4]);
 
 // reset variables
