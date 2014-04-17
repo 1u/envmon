@@ -21,13 +21,14 @@ Arduino arduino;
     
 
 
-// -------------------------------- SETUP ----------------------------------
+// ------------------------------------------ SETUP --------------------------------------------
 void setup(){
   
   println(Serial.list());
   
     // set up DataOut object; requires URL of the EEML you are updating, and your Pachube API key   
-    dOut = new DataOut(this, "https://pachube.com/api/46290.xml", "ENTER_PACHUBE_API_KEY_HERE");   
+    dOut = new DataOut(this, "https://pachube.com/api/46290.xml", 
+    "Mic4VPjFsKUAH8IFpS2RznxAgE2LWhRygjmI6a-ErnVdmNpRc2lkFd0AA4O3YIV7gKGRm22fxvblDMF_Eo95t6Clk52Jm1ebZVlNcYhX8_qN-g55UndFjSuQ67S-T-95");   
 
     //  and add and tag a datastream    
     dOut.addData(0,"light, LDR, light level");
@@ -48,37 +49,35 @@ void setup(){
     arduino.pinMode(8, Arduino.OUTPUT);
     
 
-
-//  ---------------------------------     set the window size:
-      size(640, 150);        
+      size(640, 150);                                       // set the window size:
       background(0);
 }
 
-// --------------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------------------------
 void draw()
 {
   
 {
 for (int i = 0; i < 6; i++)
-  sensorValues[i]= arduino.analogRead(i);
+  sensorValues[i]= arduino.analogRead(i);                    // read the values from the arduino
 
-for (int i = 0; i < 6; i++)
+for (int i = 0; i < 6; i++)                                  // sum them up
   sumValues[i]= sumValues[i] + sensorValues[i];
   averageCounter = averageCounter + 1;
-  
-  
   
 //   System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
   arduino.digitalWrite(9, arduino.LOW);
   delay(100);
-  arduino.digitalWrite(9, arduino.HIGH);
+  arduino.digitalWrite(9, arduino.HIGH);                      // blink once for every data-block
   delay(50);
 }
 
 
 
 
-// ----------------------------draw the graph: --------------------------
+// ------------------------------------  draw the graph:  ------------------------------------
 
 
  stroke(255,100,50);
@@ -116,7 +115,7 @@ updating = 0;
         for (int i = 0; i < 6; i++)
           averageValues[i]= (sumValues[i] / (averageCounter) );                  // make average
         for (int i = 1; i < 6; i++)
-          averageValues[i]= ((averageValues[i] - 460) /2.15f );                  //  come to a realistic value
+          averageValues[i]= ((averageValues[i] - 471) / 1.70f );                  //  come to a realistic value
         for (int i = 0; i < 6; i++)
           averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;        // round the Value to 2 floatingpoints
 
