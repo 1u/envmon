@@ -106,7 +106,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
 
 
-// -----------------update Pachube once every 10 seconds (could also be e.g. every mouseClick)
+// -----------------update Pachube once every 10 seconds (could also be e.g. every mouseClick)--------------------
 
 
 updating = 0;
@@ -119,7 +119,7 @@ updating = 0;
         for (int i = 0; i < 6; i++)
           averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;        // round the Value to 2 floatingpoints
 
-        println(" ready to POST average of "+averageCounter+" averaged values        "+averageValues[0]+",   "+averageValues[1]+",   "+averageValues[2]+",   "+averageValues[3]+",   "+averageValues[4]+",   "+averageValues[5]+"  ...");
+        println(" ready to POST average of "+averageCounter+" averaged values  "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+" ->");
 
         dOut.update(0, averageValues[0]);                                        // update the datastream
         dOut.update(1, averageValues[1]);
