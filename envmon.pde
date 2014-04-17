@@ -8,6 +8,7 @@ Arduino arduino;
 
 
     float sensorValues[] = {0,0,0,0,0,0};
+    float realValues[] = {0,0,0,0,0,0};
     float sumValues[] = {0,0,0,0,0,0};
     float averageValues[] = {0,0,0,0,0,0};
     float realAValues[] = {0,0,0,0,0,0};
@@ -16,7 +17,10 @@ Arduino arduino;
     int updating = 0;
     int xPosOld = 0;
     int xAvPosOld = 0;
-    float yPosOld = 0;
+    float yPos1 = 0;
+    float yPos3 = 0;
+    float yPosOld1 = 0;
+    float yPosOld3 = 0;
     int xPos = 1;         // horizontal position of the graph
     
 
@@ -49,22 +53,31 @@ void setup(){
     arduino.pinMode(8, Arduino.OUTPUT);
     
 
-      size(640, 150);                                       // set the window size:
+      size(640, 800);                                       // set the window size:
       background(0);
 }
 
 
 
-// ----------------------------------------------------------------------------------------------
+// --------------------------------------------  void draw  -----------------------------------------------------
 void draw()
 {
+
   
+// --------------------------------------  ARDUINO -------------------------------------
 {
 for (int i = 0; i < 6; i++)
   sensorValues[i]= arduino.analogRead(i);                    // read the values from the arduino
 
+for (int i = 1; i < 6; i++)
+  realValues[i]= ((sensorValues[i] - 471) / 1.70f );         // come to a realistic range -> can be used for calibration
+
+for (int i = 1; i < 6; i++)
+  realValues[i] = Math.round(realValues[i] * 100) / 100.0f;  // round the Value to 2 floatingpoints
+
+
 for (int i = 0; i < 6; i++)                                  // sum them up
-  sumValues[i]= sumValues[i] + sensorValues[i];
+  sumValues[i]= sumValues[i] + realValues[i];
   averageCounter = averageCounter + 1;
   
 //   System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
@@ -81,23 +94,36 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
 
  stroke(255,100,50);
- line(xPos, height, xPos, height - ((sensorValues[1] - 465 )* 2) ); 
+ line(xPos, height, xPos, height - ((sensorValues[1] - 430 )* 2) );    // inside Temp
  stroke(100,100,255);
- line(xPos, height, xPos, height - ((sensorValues[3] - 460 )* 8) ); 
+ line(xPos, height, xPos, height - ((sensorValues[3] - 455 )* 8) );    // outside Temp
+
+ stroke(100,0,255);
+ line(xPos, height, xPos, height - (sensorValues[3] * 8 * 1.70 - 380 ) );    // outside Temp
+ 
  stroke(200,200,200);
  line(xPos, height, xPos, height - sensorValues[0]); 
  
- if (updating == 1) {                                      // draw the average-line
+ if (updating == 1) {                                                 // draw the average-line
      stroke(255,230,200);
-     line(xAvPosOld, height - yPosOld, (xPos + xPosOld)/2 , height - (averageValues[1] * 4.15 - 7 ));
-     text(averageValues[1], (xPos + xPosOld)/2 - 25 , height- averageValues[1] * 4.15 - 7);
+     yPos1 = (averageValues[1] * 2 * 1.70 - 7 );
+     line(xAvPosOld, height - yPosOld1, (xPos + xPosOld)/2 , height - yPos1);
+     text(averageValues[1], (xPos + xPosOld)/2 - 25 , height- yPos1 - 5);
+     yPosOld1 = yPos1;
+     
+     stroke(150,150,255);
+     yPos3 = (averageValues[3] * 8 * 1.70 + 180 );
+     line(xAvPosOld, height - yPosOld3, (xPos + xPosOld)/2 , height - yPos3);
+     text(averageValues[3], (xPos + xPosOld)/2 - 25 , height- yPos3 - 5);
+     yPosOld3 = yPos3 ;
+          
      xAvPosOld = (xPos + xPosOld)/2;
      xPosOld = xPos;
-     yPosOld = averageValues[1] * 4.15 - 7 ;
+
      }
  
  if (xPos >= width) {                                      // at the edge of the screen, go back to the beginning:
- xPos = 0; background(0); xPosOld = 0;}
+ xPos = 0; background(0); xAvPosOld = 0; xPosOld = 0;}
  else {
    xPos++;                                                 // increment the horizontal position:
  }
@@ -114,8 +140,8 @@ updating = 0;
         updating = 1;
         for (int i = 0; i < 6; i++)
           averageValues[i]= (sumValues[i] / (averageCounter) );                  // make average
-        for (int i = 1; i < 6; i++)
-          averageValues[i]= ((averageValues[i] - 471) / 1.70f );                  //  come to a realistic value
+//        for (int i = 1; i < 6; i++)
+//          averageValues[i]= ((averageValues[i] - 471) / 1.70f );                  //  come to a realistic value
         for (int i = 0; i < 6; i++)
           averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;        // round the Value to 2 floatingpoints
 
@@ -126,7 +152,7 @@ updating = 0;
         dOut.update(2, averageValues[2]);
         dOut.update(3, averageValues[3]);
         dOut.update(4, averageValues[4]);
-        dOut.update(5, averageValues[5]);
+//        dOut.update(5, averageValues[5]);
 
 // reset variables
         averageCounter = 0;
