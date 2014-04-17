@@ -112,8 +112,8 @@ for (int i = 0; i < 6; i++)                                  // sum them up
  line(xPos, height, xPos, height - (realValues[1] * 4 + 50 ) );       // inside Temp
 
  stroke(150,140,255);
- // line(xPos, height, xPos, height - (realValues[3] * 14  + 220 ) );    // outside Temp
- line(xPos, height, xPos, height - (realValues[3] * 32  + yOffset3 ) ); 
+  line(xPos, height, xPos, height - (realValues[3] * 14  - 160 ) );    // outside Temp
+// line(xPos, height, xPos, height - (realValues[3] * 32  + yOffset3 ) ); 
  
  stroke(200,200,200);
  line(xPos, height, xPos, height - realValues[0]);                  // light
@@ -144,8 +144,8 @@ for (int i = 0; i < 6; i++)                                  // sum them up
      text(averageValues[1], xAvPos - 25 , height- (yPos1 + 5) ); 
      yPosOld1 = yPos1;
 
-//     yPos3 = (averageValues[3] * 14 + 220 );                                       // ouside
-     yPos3 = (averageValues[3] * 32 + yOffset3 ); 
+     yPos3 = (averageValues[3] * 14 - 160 );                                       // ouside
+//     yPos3 = (averageValues[3] * 32 + yOffset3 ); 
      stroke(255,120,0);
      line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);
      line(xAvPos, height -yPos3 + 4 , xAvPos, height - yPos3 - 3 );
@@ -233,3 +233,7 @@ averageValues[5] = 0 ;
 // vorschlag debug vom usb serial problem:  serial-comunikation ines textfile schribä lah
 // und ines anders texfile duräzelä lah 
 // so jedi ziilä durenummerierä und denn immer überschribä
+
+// fortlaufend schreiben am ende des graphs und grafik nach links verschieben
+
+// dass er nicht stoppt während patchube upload, sondern weitermisst
