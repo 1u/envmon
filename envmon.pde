@@ -197,10 +197,11 @@ averageValues[5] = 0 ;
         dOut.update(5, averageValues[5]);
         dOut.update(6, averageValues[4]);
 
-// reset variables
+                                                                                 // reset variables
         averageCounter = 0;
         sumValues[0] = (0); sumValues[1] = (0); sumValues[2] = (0); sumValues[3] = (0);sumValues[4] = (0); sumValues[5] = (0);
-                
+        
+        // hier müsste man für nächste zeile eine while-schlauffe versuchen (geht aber warscheinlich nicht, oder?) damit er nur ca eine minute versucht und dann abbricht, falls es hangen geblieben ist, bei schlechter netzwerk verbindung...
         int response = dOut.updatePachube();                                     // updatePachube() updates by an authenticated PUT HTTP request
         if ((response) == 200){
 
