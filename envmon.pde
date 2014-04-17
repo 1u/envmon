@@ -22,9 +22,10 @@ Arduino arduino;
     float yPos1 = 0;
     float yPos3 = 0;
     float yPos4 = 0;
-    float yPosOld1 = 0;
-    float yPosOld3 = 0;
-    float yPosOld4 = 0;
+    float yPosOld1 = 135;
+    float yPosOld3 = 70;
+    float yPosOld4 = 170;
+    float yOffset3 = 0;
          
     
 
@@ -62,6 +63,8 @@ void setup(){
 //      size (3840, 300);
 //      size (320, 150);
       background(0);
+      
+      xPos = width;
 }
 
 
@@ -110,7 +113,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
  stroke(150,140,255);
  // line(xPos, height, xPos, height - (realValues[3] * 14  + 220 ) );    // outside Temp
- line(xPos, height, xPos, height - (realValues[3] * 32  + 570 ) ); 
+ line(xPos, height, xPos, height - (realValues[3] * 32  + yOffset3 ) ); 
  
  stroke(200,200,200);
  line(xPos, height, xPos, height - realValues[0]);                  // light
@@ -142,12 +145,12 @@ for (int i = 0; i < 6; i++)                                  // sum them up
      yPosOld1 = yPos1;
 
 //     yPos3 = (averageValues[3] * 14 + 220 );                                       // ouside
-     yPos3 = (averageValues[3] * 32 + 570 ); 
+     yPos3 = (averageValues[3] * 32 + yOffset3 ); 
      stroke(255,120,0);
      line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);
      line(xAvPos, height -yPos3 + 4 , xAvPos, height - yPos3 - 3 );
      stroke(100,110,255);
-     line(xPos, height, xPos, height - (realValues[3] * 32  + 570 ) );
+     line(xPos, height, xPos, height - (realValues[3] * 32  + yOffset3 ) );
      fill(255,120,0); 
      text(averageValues[3], xAvPos - 25 , height- (yPos3 + 15) );
      yPosOld3 = yPos3 ;
@@ -159,6 +162,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
      }
  
  if (xPos >= width) {                                      // at the edge of the screen, go back to the beginning:
+ yOffset3 = realValues[3] * (-38);                       // -15 -> 570    -10 -> 380
  xPos = 0; background(0); xAvPosOld = 0; xPosOld = 0;}
  else {
    xPos++;                                                 // increment the horizontal position:
