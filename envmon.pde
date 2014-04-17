@@ -22,9 +22,9 @@ Arduino arduino;
     float yPos1 = 0;
     float yPos3 = 0;
     float yPos4 = 0;
-    float yPosOld1 = 135;
+    float yPosOld1 = 130;
     float yPosOld3 = 70;
-    float yPosOld4 = 170;
+    float yPosOld4 = 168;
     float yOffset3 = 0;
          
     
@@ -221,3 +221,8 @@ averageValues[5] = 0 ;
 
     }
   }
+  
+
+// vorschlag debug vom usb serial problem:  serial-comunikation ines textfile schribä lah
+// und ines anders texfile duräzelä lah 
+// so jedi ziilä durenummerierä und denn immer überschribä
