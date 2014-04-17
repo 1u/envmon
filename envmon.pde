@@ -19,8 +19,10 @@ Arduino arduino;
     int xAvPosOld = 0;
     float yPos1 = 0;
     float yPos3 = 0;
+    float yPos4 = 0;
     float yPosOld1 = 0;
     float yPosOld3 = 0;
+    float yPosOld4 = 0;
     int xPos = 1;         // horizontal position of the graph
     
 
@@ -53,7 +55,7 @@ void setup(){
     arduino.pinMode(8, Arduino.OUTPUT);
     
 
-      size(640, 800);                                       // set the window size:
+      size(640, 300);                                       // set the window size:
       background(0);
 }
 
@@ -75,7 +77,6 @@ for (int i = 1; i < 6; i++)
 for (int i = 1; i < 6; i++)
   realValues[i] = Math.round(realValues[i] * 100) / 100.0f;  // round the Value to 2 floatingpoints
 
-
 for (int i = 0; i < 6; i++)                                  // sum them up
   sumValues[i]= sumValues[i] + realValues[i];
   averageCounter = averageCounter + 1;
@@ -92,30 +93,43 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
 // ------------------------------------  draw the graph:  ------------------------------------
 
+//                                                   ------   realTime values                        
 
- stroke(255,100,50);
- line(xPos, height, xPos, height - ((sensorValues[1] - 430 )* 2) );    // inside Temp
- stroke(100,100,255);
- line(xPos, height, xPos, height - ((sensorValues[3] - 455 )* 8) );    // outside Temp
+  stroke(140,240,240);
+ line(xPos, height, xPos, height - (realValues[4] * 4 + 50 ) );       // pool Temp
 
- stroke(100,0,255);
- line(xPos, height, xPos, height - (sensorValues[3] * 8 * 1.70 - 380 ) );    // outside Temp
+ stroke(100,30,20);
+ line(xPos, height, xPos, height - (realValues[1] * 4 + 50 ) );       // inside Temp
+
+ stroke(150,140,255);
+ line(xPos, height, xPos, height - (realValues[3] * 14  + 150 ) );    // outside Temp
  
  stroke(200,200,200);
- line(xPos, height, xPos, height - sensorValues[0]); 
+ line(xPos, height, xPos, height - sensorValues[0]);                  // light
  
- if (updating == 1) {                                                 // draw the average-line
-     stroke(255,230,200);
-     yPos1 = (averageValues[1] * 2 * 1.70 - 7 );
-     line(xAvPosOld, height - yPosOld1, (xPos + xPosOld)/2 , height - yPos1);
-     text(averageValues[1], (xPos + xPosOld)/2 - 25 , height- yPos1 - 5);
+ 
+ //                                                  ------   draw the average-lines
+ 
+ if (updating == 1) {
+  
+      stroke(255,255,255);
+     yPos4 = (averageValues[4] * 4 + 50 );
+     line(xAvPosOld, height - yPosOld4, (xPos + xPosOld)/2 , height - yPos4);   // pool
+     fill(255,255,255); text(averageValues[4], (xPos + xPosOld)/2 - 25 , height- yPos4 - 5);
+     yPosOld4 = yPos4 ; 
+ 
+     stroke(20,0,0);
+     yPos1 = (averageValues[1] * 4 + 50 );
+     line(xAvPosOld, height - yPosOld1, (xPos + xPosOld)/2 , height - yPos1);    // inside
+     fill(0,0,0); text(averageValues[1], (xPos + xPosOld)/2 - 25 , height- yPos1 - 5); 
      yPosOld1 = yPos1;
      
-     stroke(150,150,255);
-     yPos3 = (averageValues[3] * 8 * 1.70 + 180 );
-     line(xAvPosOld, height - yPosOld3, (xPos + xPosOld)/2 , height - yPos3);
-     text(averageValues[3], (xPos + xPosOld)/2 - 25 , height- yPos3 - 5);
+     stroke(255,120,0);
+     yPos3 = (averageValues[3] * 14 + 150 );
+     line(xAvPosOld, height - yPosOld3, (xPos + xPosOld)/2 , height - yPos3);     // ouside
+     fill(255,120,0); text(averageValues[3], (xPos + xPosOld)/2 - 25 , height- yPos3 - 5);
      yPosOld3 = yPos3 ;
+       
           
      xAvPosOld = (xPos + xPosOld)/2;
      xPosOld = xPos;
@@ -145,7 +159,7 @@ updating = 0;
         for (int i = 0; i < 6; i++)
           averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;        // round the Value to 2 floatingpoints
 
-        println(" ready to POST average of "+averageCounter+" averaged values  "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+" ->");
+        println(" ready to POST average of "+averageCounter+" averaged values  "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+"   ...");
 
         dOut.update(0, averageValues[0]);                                        // update the datastream
         dOut.update(1, averageValues[1]);
