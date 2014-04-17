@@ -10,9 +10,13 @@ Arduino arduino;
     float sensorValues[] = {0,0,0,0,0,0};
     float sumValues[] = {0,0,0,0,0,0};
     float averageValues[] = {0,0,0,0,0,0};
+    float realAValues[] = {0,0,0,0,0,0};
     int averageCounter = (int) 0;
-
- int xPos = 1;         // horizontal position of the graph
+    
+    int updating = 0;
+    int xPosOld = 0;
+    int yPosOld = 0;
+    int xPos = 1;         // horizontal position of the graph
     
 
 
@@ -74,9 +78,16 @@ for (int i = 0; i < 6; i++)
 // ----------------------------draw the line: --------------------------
 
  stroke(255,150,150);
- line(xPos, height, xPos, height - ((sensorValues[1] - 480 )* 2) ); 
+ line(xPos, height, xPos, height - ((sensorValues[3] - 455 )* 8) ); 
  stroke(127,127,255);
  line(xPos, height, xPos, height - sensorValues[0]); 
+ 
+ if (updating == 1) {
+     
+     stroke(200,200,250);
+     line(xPosOld, yPosOld, xPos, height - averageValues[1]);
+     xPos = xPosOld
+     }
  
  if (xPos >= width) {                    // at the edge of the screen, go back to the beginning:
  xPos = 0; background(0);}
@@ -88,51 +99,47 @@ for (int i = 0; i < 6; i++)
 
 
 
-
-
 // -----------------update once every 10 seconds (could also be e.g. every mouseClick)
 
+
+updating = 0
     if ((millis() - lastUpdate) > 5000){
+        updating = 1
         println("  -  -  -  ready to POST average of "+averageCounter+" values  ...");
         
         for (int i = 0; i < 6; i++)
-         averageValues[i]= (sumValues[i] / (averageCounter) );
-
-
-for (int i = 0; i < 6; i++)
-averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;           // round the Value to 2 floatingpoints
+          averageValues[i]= (sumValues[i] / (averageCounter) );                  // make average
+        for (int i = 1; i < 6; i++)
+          averageValues[i]= ((averageValues[i] - 460) /2.15f );                  //  come to a realistic value
+        for (int i = 0; i < 6; i++)
+          averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;        // round the Value to 2 floatingpoints
 
         println("calculated averages           "+averageValues[0]+",   "+averageValues[1]+",   "+averageValues[2]+",   "+averageValues[3]+",   "+averageValues[4]+",   "+averageValues[5]+"  ...");
 
-        dOut.update(0, averageValues[0]);           // update the datastream
+        dOut.update(0, averageValues[0]);                                        // update the datastream
         dOut.update(1, averageValues[1]);
         dOut.update(2, averageValues[2]);
         dOut.update(3, averageValues[3]);
         dOut.update(4, averageValues[4]);
         dOut.update(5, averageValues[5]);
 
-
 // reset variables
         averageCounter = 0;
         sumValues[0] = (0); sumValues[1] = (0); sumValues[2] = (0); sumValues[3] = (0);sumValues[4] = (0); sumValues[5] = (0);
                 
-        int response = dOut.updatePachube();       // updatePachube() updates by an authenticated PUT HTTP request
+        int response = dOut.updatePachube();                                     // updatePachube() updates by an authenticated PUT HTTP request
         if ((response) == 200){
           println("Feed updated sucessfully");
           arduino.digitalWrite(8, arduino.HIGH);
           delay(100);
           arduino.digitalWrite(8, arduino.LOW);
         }
-          else {
-           if ((response) == 401){
-             println("Update failed: unauthorized");}
-             else {
-               if ((response) == 404){
-                 println("Update failed: feed doesn't exist");}
-                 else {
-                   println("Update failed: unknown error nr."+response+"...");}
-             }}
-//        println(response); // should be 200 if successful; 401 if unauthorized; 404 if feed doesn't exist
+          else if ((response) == 401){
+            println("Update failed: unauthorized");}
+            else if ((response) == 404){
+              println("Update failed: feed doesn't exist");}
+                else {
+                  println("Update failed: unknown error nr."+response+"...");}
 
         lastUpdate = millis();
 
