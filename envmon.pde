@@ -37,23 +37,13 @@ void setup(){
     
 
 
-     // set the window size:
+ --------------------------// set the window size:
       size(640, 100);        
       background(0);
 }
 
 
 void draw()
-{
-//   String myString = myPort.readStringUntil('\n');
-//   if (myString != null) {
-//   String[] sensors = split(myString, ',');
-//   float inByte = float(sensors[0]); 
-//   println(inByte);
-//   println(sensors[1]);
-  
-
-{
   
 for (int i = 0; i < 6; i++)
   sensorValues[i]= arduino.analogRead(i);
@@ -70,7 +60,8 @@ for (int i = 0; i < 6; i++)
 }
 
 
-    // update once every 10 seconds (could also be e.g. every mouseClick)
+// -----------------update once every 10 seconds (could also be e.g. every mouseClick)
+
     if ((millis() - lastUpdate) > 5000){
         println("ready to POST average of "+averageCounter+" values...");
         
@@ -84,6 +75,7 @@ for (int i = 0; i < 6; i++)
         dOut.update(2, averageValues[2]);           // update the datastream
         dOut.update(3, averageValues[3]);           // update the datastream
         dOut.update(4, averageValues[4]);           // update the datastream
+        dOut.update(5, averageValues[5]);           // update the datastream
 
 
 
