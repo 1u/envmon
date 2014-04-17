@@ -73,7 +73,9 @@ void draw()
   
 // --------------------------------------  ARDUINO -------------------------------------
 {
-for (int i = 0; i < 6; i++)
+  realValues[0] = arduino.analogRead(0);
+  
+for (int i = 1; i < 6; i++)
   sensorValues[i]= arduino.analogRead(i);                    // read the values from the arduino
 
 for (int i = 1; i < 6; i++)
@@ -86,7 +88,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
   sumValues[i]= sumValues[i] + realValues[i];
   averageCounter = averageCounter + 1;
   
-//   System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
+//  System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
   arduino.digitalWrite(9, arduino.LOW);
   delay(200);                                                 // How often it's gonna be mesured
   arduino.digitalWrite(9, arduino.HIGH);                      // blink once for every data-block
@@ -108,10 +110,10 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
  stroke(150,140,255);
  // line(xPos, height, xPos, height - (realValues[3] * 14  + 220 ) );    // outside Temp
- line(xPos, height, xPos, height - (realValues[3] * 32  + 470 ) ); 
+ line(xPos, height, xPos, height - (realValues[3] * 32  + 570 ) ); 
  
  stroke(200,200,200);
- line(xPos, height, xPos, height - sensorValues[0]);                  // light
+ line(xPos, height, xPos, height - realValues[0]);                  // light
  
  
  //                                                  ------   draw the average-lines
@@ -140,12 +142,12 @@ for (int i = 0; i < 6; i++)                                  // sum them up
      yPosOld1 = yPos1;
 
 //     yPos3 = (averageValues[3] * 14 + 220 );                                       // ouside
-     yPos3 = (averageValues[3] * 32 + 470 ); 
+     yPos3 = (averageValues[3] * 32 + 570 ); 
      stroke(255,120,0);
      line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);
      line(xAvPos, height -yPos3 + 4 , xAvPos, height - yPos3 - 3 );
      stroke(100,110,255);
-     line(xPos, height, xPos, height - (realValues[3] * 32  + 470 ) );
+     line(xPos, height, xPos, height - (realValues[3] * 32  + 570 ) );
      fill(255,120,0); 
      text(averageValues[3], xAvPos - 25 , height- (yPos3 + 15) );
      yPosOld3 = yPos3 ;
