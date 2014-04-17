@@ -46,7 +46,7 @@ void setup(){
     dOut.addData(3,"temp, air, outside temp");
     dOut.addData(4,"empty");
     dOut.addData(5, "");
-    dOut.addData(6, "pool, pooltemp, water");
+    dOut.addData(6, "terrarium");
     
     arduino = new Arduino(this, Arduino.list()[0], 57600);  //9600
     // serial.bufferUntil('\n');
