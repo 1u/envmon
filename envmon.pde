@@ -212,6 +212,9 @@ averageValues[5] = 0 ;
             println("Update failed: unauthorized");}
             else if ((response) == 404){
               println("Update failed: feed doesn't exist");}
+              else if ((response) == 999){
+                println("Update failed: no Internet connection?");
+                println("Last sucessful update on XXXXX" );}
                 else {
                   println("Update failed: unknown error nr."+response+"...");}
 
