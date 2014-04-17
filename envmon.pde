@@ -61,7 +61,7 @@ void setup(){
 
       size(640, 200);                                       // set the window size:
 //      size (3840, 300);
-//      size (320, 150);
+//      size (320, 150);     1040/200
       background(0);
       
       xPos = width;
@@ -93,9 +93,9 @@ for (int i = 0; i < 6; i++)                                  // sum them up
   
 //  System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
   arduino.digitalWrite(9, arduino.LOW);
-  delay(200);                                                 // How often it's gonna be mesured
+  delay(400);                                                 // How often it's gonna be mesured
   arduino.digitalWrite(9, arduino.HIGH);                      // blink once for every data-block
-  delay(50);
+  delay(200);      // 200 und 50 vorher. luege ob bi 400/200 immerno crashes...
 }
 
 
@@ -176,7 +176,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
 
 updating = 0;
-    if ((millis() - lastUpdate) > 20000){
+    if ((millis() - lastUpdate) > 60000){
         updating = 1;
         for (int i = 0; i < 6; i++)
           averageValues[i]= (sumValues[i] / (averageCounter) );                  // make average
