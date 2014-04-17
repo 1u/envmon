@@ -37,16 +37,16 @@ void setup(){
   
     // set up DataOut object; requires URL of the EEML you are updating, and your Pachube API key   
     dOut = new DataOut(this, "https://pachube.com/api/46290.xml", 
-    "Mic4VPjFsKUAH8IFpS2RznxAgE2LWhRygjmI6a-ErnVdmNpRc2lkFd0AA4O3YIV7gKGRm22fxvblDMF_Eo95t6Clk52Jm1ebZVlNcYhX8_qN-g55UndFjSuQ67S-T-95");   
+    "ENTER_PACHUBE_API_KEY_HERE");   
 
     //  and add and tag a datastream    
     dOut.addData(0,"light, LDR, light level");
     dOut.addData(1,"temp, air, room temp");
-    dOut.addData(2,"temp, air, heater temp");
-    dOut.addData(3,"temp, air, outside temp");
-    dOut.addData(4,"empty");
-    dOut.addData(5, "");
-    dOut.addData(6, "terrarium");
+    //dOut.addData(2,"temp, air, heater temp");
+    //dOut.addData(3,"temp, air, outside temp");
+    //dOut.addData(4,"empty");
+    //dOut.addData(5, "");
+    //dOut.addData(6, "terrarium");
     
     arduino = new Arduino(this, Arduino.list()[0], 57600);  //9600
     // serial.bufferUntil('\n');
@@ -90,12 +90,12 @@ for (int i = 1; i < 6; i++)
 for (int i = 0; i < 6; i++)                                  // sum them up
   sumValues[i]= sumValues[i] + realValues[i];
   averageCounter = averageCounter + 1;
-  
-//  System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
+
+  System.out.println("Get sensor data...  values:   "+sensorValues[(0)] +",  "+sensorValues[0] +",  "+sensorValues[1] +",  "+sensorValues[0] +",   " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");  // print curent values
   arduino.digitalWrite(9, arduino.LOW);
-  delay(400);                                                 // How often it's gonna be mesured
-  arduino.digitalWrite(9, arduino.HIGH);                      // blink once for every data-block
-  delay(200);      // 200 und 50 vorher. luege ob bi 400/200 immerno crashes...
+  delay(400*5);                                              // How often it's gonna be mesured
+  arduino.digitalWrite(9, arduino.HIGH);                     // blink once for every data-block
+  delay(200*5);                                              // 200 und 50 vorher. luege ob bi 400/200 immerno crashes...
 }
 
 
@@ -176,7 +176,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
 
 
 updating = 0;
-    if ((millis() - lastUpdate) > 60000){
+    if ((millis() - lastUpdate) > 60000*5){
         updating = 1;
         for (int i = 0; i < 6; i++)
           averageValues[i]= (sumValues[i] / (averageCounter) );                  // make average
@@ -191,11 +191,11 @@ averageValues[5] = 0 ;
 
         dOut.update(0, averageValues[0]);                                        // update the datastream
         dOut.update(1, averageValues[1]);
-        dOut.update(2, averageValues[2]);
-        dOut.update(3, averageValues[3]);
-        dOut.update(4, averageValues[4]);
-        dOut.update(5, averageValues[5]);
-        dOut.update(6, averageValues[4]);
+//        dOut.update(2, averageValues[2]);
+//        dOut.update(3, averageValues[3]);
+//        dOut.update(4, averageValues[4]);
+//        dOut.update(5, averageValues[5]);
+//        dOut.update(6, averageValues[4]);
 
                                                                                  // reset variables
         averageCounter = 0;
