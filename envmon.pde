@@ -44,7 +44,7 @@ void setup(){
     dOut.addData(2,"temp, air, heater temp");
     dOut.addData(3,"temp, air, outside temp");
     dOut.addData(4,"empty");
-    dOut.addData(5,"empty");
+    dOut.addData(5,);
     dOut.addData(6, "pool, pooltemp, water");
     
     arduino = new Arduino(this, Arduino.list()[0], 57600);  //9600
@@ -105,7 +105,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
  line(xPos, height, xPos, height - (realValues[1] * 4 + 50 ) );       // inside Temp
 
  stroke(150,140,255);
- line(xPos, height, xPos, height - (realValues[3] * 14  + 160 ) );    // outside Temp
+ line(xPos, height, xPos, height - (realValues[3] * 14  + 220 ) );    // outside Temp
  
  stroke(200,200,200);
  line(xPos, height, xPos, height - sensorValues[0]);                  // light
@@ -133,7 +133,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
      text(averageValues[1], xAvPos - 25 , height- yPos1 - 5); 
      yPosOld1 = yPos1;
 
-     yPos3 = (averageValues[3] * 14 + 160 );     
+     yPos3 = (averageValues[3] * 14 + 220 );     
      stroke(255,120,0);
      line(xAvPosOld, height - yPosOld3, xAvPos , height - yPos3);     // ouside
      line(xAvPos, height, xAvPos, height - yPos3 );
@@ -188,7 +188,7 @@ updating = 0;
         if ((response) == 200){
           println("Feed updated sucessfully");
           arduino.digitalWrite(8, arduino.HIGH);
-          delay(100);
+          delay(50);
           arduino.digitalWrite(8, arduino.LOW);
         }
           else if ((response) == 401){
