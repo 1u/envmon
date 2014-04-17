@@ -15,6 +15,7 @@ Arduino arduino;
     
     int updating = 0;
     int xPosOld = 0;
+    int xAvPosOld = 0;
     float yPosOld = 0;
     int xPos = 1;         // horizontal position of the graph
     
@@ -26,13 +27,13 @@ void setup(){
   println(Serial.list());
   
     // set up DataOut object; requires URL of the EEML you are updating, and your Pachube API key   
-    dOut = new DataOut(this, "https://pachube.com/api/46230.xml", "ENTER_PACHUBE_API_KEY_HERE");   
+    dOut = new DataOut(this, "https://pachube.com/api/46290.xml", "ENTER_PACHUBE_API_KEY_HERE");   
 
     //  and add and tag a datastream    
-    dOut.addData(0,"light");
-    dOut.addData(1,"temp1");
-    dOut.addData(2,"temp2");
-    dOut.addData(3,"temp3");
+    dOut.addData(0,"light, LDR, light level");
+    dOut.addData(1,"temp, air, room temp");
+    dOut.addData(2,"temp, air, heater temp");
+    dOut.addData(3,"temp, air, outside temp");
     dOut.addData(4,"empty");
     dOut.addData(5,"empty");
     
@@ -49,7 +50,7 @@ void setup(){
 
 
 //  ---------------------------------     set the window size:
-      size(640, 120);        
+      size(640, 150);        
       background(0);
 }
 
@@ -77,42 +78,41 @@ for (int i = 0; i < 6; i++)
 
 
 
-// ----------------------------draw the line: --------------------------
+// ----------------------------draw the graph: --------------------------
 
 
- stroke(255,150,50);
+ stroke(255,100,50);
  line(xPos, height, xPos, height - ((sensorValues[1] - 465 )* 2) ); 
  stroke(100,100,255);
  line(xPos, height, xPos, height - ((sensorValues[3] - 460 )* 8) ); 
  stroke(200,200,200);
  line(xPos, height, xPos, height - sensorValues[0]); 
  
- if (updating == 1) {
-     
-     stroke(255,200,150);
-     line(xPosOld, height - yPosOld, xPos, height - (averageValues[1] * 4.15 - 7 ));
+ if (updating == 1) {                                      // draw the average-line
+     stroke(255,230,200);
+     line(xAvPosOld, height - yPosOld, (xPos + xPosOld)/2 , height - (averageValues[1] * 4.15 - 7 ));
+     text(averageValues[1], (xPos + xPosOld)/2 - 25 , height- averageValues[1] * 4.15 - 7);
+     xAvPosOld = (xPos + xPosOld)/2;
      xPosOld = xPos;
      yPosOld = averageValues[1] * 4.15 - 7 ;
      }
  
- if (xPos >= width) {                    // at the edge of the screen, go back to the beginning:
- xPos = 0; background(0);}
+ if (xPos >= width) {                                      // at the edge of the screen, go back to the beginning:
+ xPos = 0; background(0); xPosOld = 0;}
  else {
-   xPos++;                               // increment the horizontal position:
+   xPos++;                                                 // increment the horizontal position:
  }
 
 
 
 
 
-// -----------------update once every 10 seconds (could also be e.g. every mouseClick)
+// -----------------update Pachube once every 10 seconds (could also be e.g. every mouseClick)
 
 
 updating = 0;
-    if ((millis() - lastUpdate) > 5000){
+    if ((millis() - lastUpdate) > 10000){
         updating = 1;
-        println("  -  -  -  ready to POST average of "+averageCounter+" values  ...");
-        
         for (int i = 0; i < 6; i++)
           averageValues[i]= (sumValues[i] / (averageCounter) );                  // make average
         for (int i = 1; i < 6; i++)
