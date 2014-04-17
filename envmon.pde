@@ -91,7 +91,7 @@ for (int i = 0; i < 6; i++)                                  // sum them up
   sumValues[i]= sumValues[i] + realValues[i];
   averageCounter = averageCounter + 1;
 
-  System.out.println("Get sensor data...  values:   "+sensorValues[(0)] +",  "+sensorValues[0] +",  "+sensorValues[1] +",  "+sensorValues[0] +",   " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");  // print curent values
+  System.out.println("Get sensor data...  values:   "+sensorValues[0] +",   "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");  // print curent values
   arduino.digitalWrite(9, arduino.LOW);
   delay(400*5);                                              // How often it's gonna be mesured
   arduino.digitalWrite(9, arduino.HIGH);                     // blink once for every data-block
