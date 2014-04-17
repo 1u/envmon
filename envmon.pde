@@ -187,7 +187,7 @@ updating = 0;
 
 averageValues[5] = 0 ;
 
-        println(" ready to POST average of "+averageCounter+" averaged values  "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+"   ...");
+        println("ready to POST average of "+averageCounter+" averaged values  "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+"   ...");
 
         dOut.update(0, averageValues[0]);                                        // update the datastream
         dOut.update(1, averageValues[1]);
@@ -203,7 +203,9 @@ averageValues[5] = 0 ;
                 
         int response = dOut.updatePachube();                                     // updatePachube() updates by an authenticated PUT HTTP request
         if ((response) == 200){
-          println("Feed updated sucessfully");
+
+          int s = second(); int m = minute(); int h = hour(); int d = day(); int mo = month(); int y = year();
+          println("   Feed updated sucessfully    ___"+d+"."+mo+"."+y+"  at "+h+":"+m+":"+s+"___");
           arduino.digitalWrite(8, arduino.HIGH);
           delay(50);
           arduino.digitalWrite(8, arduino.LOW);
