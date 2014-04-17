@@ -2,7 +2,7 @@ import processing.serial.*;
 import eeml.*;
 DataOut dOut;
 float lastUpdate;
-Serial myPort;   
+// Serial myPort;   
 import cc.arduino.*;
 Arduino arduino;
 
@@ -12,8 +12,15 @@ Arduino arduino;
     float averageValues[] = {0,0,0,0,0,0};
     int averageCounter = (int) 0;
 
+ int xPos = 1;         // horizontal position of the graph
     
+
+
+// -------------------------------- SETUP ----------------------------------
 void setup(){
+  
+  println(Serial.list());
+  
     // set up DataOut object; requires URL of the EEML you are updating, and your Pachube API key   
     dOut = new DataOut(this, "https://pachube.com/api/46230.xml", "ENTER_PACHUBE_API_KEY_HERE");   
 
@@ -54,35 +61,55 @@ for (int i = 0; i < 6; i++)
   sumValues[i]= sumValues[i] + sensorValues[i];
   averageCounter = averageCounter + 1;
   
-  System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
+//   System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
   arduino.digitalWrite(9, arduino.LOW);
-  delay(300);
+  delay(100);
   arduino.digitalWrite(9, arduino.HIGH);
-  delay(300);
+  delay(50);
 }
+
+
+
+
+// ----------------------------draw the line: --------------------------
+
+ stroke(255,150,150);
+ line(xPos, height, xPos, height - ((sensorValues[1] - 480 )* 2) ); 
+ stroke(127,127,255);
+ line(xPos, height, xPos, height - sensorValues[0]); 
+ 
+ if (xPos >= width) {                    // at the edge of the screen, go back to the beginning:
+ xPos = 0; background(0);}
+ else {
+   xPos++;                               // increment the horizontal position:
+ }
+
+
+
+
+
 
 
 // -----------------update once every 10 seconds (could also be e.g. every mouseClick)
 
     if ((millis() - lastUpdate) > 5000){
-        println("ready to POST average of "+averageCounter+" values...");
+        println("  -  -  -  ready to POST average of "+averageCounter+" values  ...");
         
         for (int i = 0; i < 6; i++)
          averageValues[i]= (sumValues[i] / (averageCounter) );
 
 
 for (int i = 0; i < 6; i++)
-averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f; 
+averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;           // round the Value to 2 floatingpoints
 
-        println("calculated averages        "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+"  ...");
+        println("calculated averages           "+averageValues[0]+",   "+averageValues[1]+",   "+averageValues[2]+",   "+averageValues[3]+",   "+averageValues[4]+",   "+averageValues[5]+"  ...");
 
         dOut.update(0, averageValues[0]);           // update the datastream
-        dOut.update(1, averageValues[1]);           // update the datastream
-        dOut.update(2, averageValues[2]);           // update the datastream
-        dOut.update(3, averageValues[3]);           // update the datastream
-        dOut.update(4, averageValues[4]);           // update the datastream
-        dOut.update(5, averageValues[5]);           // update the datastream
-
+        dOut.update(1, averageValues[1]);
+        dOut.update(2, averageValues[2]);
+        dOut.update(3, averageValues[3]);
+        dOut.update(4, averageValues[4]);
+        dOut.update(5, averageValues[5]);
 
 
 // reset variables
@@ -108,5 +135,8 @@ averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;
 //        println(response); // should be 200 if successful; 401 if unauthorized; 404 if feed doesn't exist
 
         lastUpdate = millis();
+
+
+
     }
   }
