@@ -37,14 +37,16 @@ void setup(){
     
 
 
- --------------------------// set the window size:
+//  ---------------------------------     set the window size:
       size(640, 100);        
       background(0);
 }
 
-
+// --------------------------------------------------------------------------------
 void draw()
+{
   
+{
 for (int i = 0; i < 6; i++)
   sensorValues[i]= arduino.analogRead(i);
 
@@ -52,7 +54,7 @@ for (int i = 0; i < 6; i++)
   sumValues[i]= sumValues[i] + sensorValues[i];
   averageCounter = averageCounter + 1;
   
-  System.out.println("Get sensor data...  values: "+sensorValues[0] +", "+sensorValues[1] +", " +sensorValues[2] + ", "+sensorValues[3] +", "+sensorValues[4] +", "+sensorValues[5] +"  ---");   // "\n---------------------");
+  System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
   arduino.digitalWrite(9, arduino.LOW);
   delay(300);
   arduino.digitalWrite(9, arduino.HIGH);
@@ -68,7 +70,11 @@ for (int i = 0; i < 6; i++)
         for (int i = 0; i < 6; i++)
          averageValues[i]= (sumValues[i] / (averageCounter) );
 
-        println("which are the following averages "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+"  ...");
+
+for (int i = 0; i < 6; i++)
+averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f; 
+
+        println("calculated averages        "+averageValues[0]+", "+averageValues[1]+", "+averageValues[2]+", "+averageValues[3]+", "+averageValues[4]+", "+averageValues[5]+"  ...");
 
         dOut.update(0, averageValues[0]);           // update the datastream
         dOut.update(1, averageValues[1]);           // update the datastream
