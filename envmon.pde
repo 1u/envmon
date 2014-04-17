@@ -15,7 +15,7 @@ Arduino arduino;
     
     int updating = 0;
     int xPosOld = 0;
-    int yPosOld = 0;
+    float yPosOld = 0;
     int xPos = 1;         // horizontal position of the graph
     
 
@@ -49,7 +49,7 @@ void setup(){
 
 
 //  ---------------------------------     set the window size:
-      size(640, 100);        
+      size(640, 120);        
       background(0);
 }
 
@@ -65,6 +65,8 @@ for (int i = 0; i < 6; i++)
   sumValues[i]= sumValues[i] + sensorValues[i];
   averageCounter = averageCounter + 1;
   
+  
+  
 //   System.out.println("Get sensor data...  values:   "+sensorValues[0] +",    "+sensorValues[1] +",    " +sensorValues[2] + ",    "+sensorValues[3] +",    "+sensorValues[4] +",    "+sensorValues[5] +" ");   // "\n---------------------");
   arduino.digitalWrite(9, arduino.LOW);
   delay(100);
@@ -77,16 +79,20 @@ for (int i = 0; i < 6; i++)
 
 // ----------------------------draw the line: --------------------------
 
- stroke(255,150,150);
- line(xPos, height, xPos, height - ((sensorValues[3] - 455 )* 8) ); 
- stroke(127,127,255);
+
+ stroke(255,150,50);
+ line(xPos, height, xPos, height - ((sensorValues[1] - 465 )* 2) ); 
+ stroke(100,100,255);
+ line(xPos, height, xPos, height - ((sensorValues[3] - 460 )* 8) ); 
+ stroke(200,200,200);
  line(xPos, height, xPos, height - sensorValues[0]); 
  
  if (updating == 1) {
      
-     stroke(200,200,250);
-     line(xPosOld, yPosOld, xPos, height - averageValues[1]);
-     xPos = xPosOld
+     stroke(255,200,150);
+     line(xPosOld, height - yPosOld, xPos, height - (averageValues[1] * 4.15 - 7 ));
+     xPosOld = xPos;
+     yPosOld = averageValues[1] * 4.15 - 7 ;
      }
  
  if (xPos >= width) {                    // at the edge of the screen, go back to the beginning:
@@ -102,9 +108,9 @@ for (int i = 0; i < 6; i++)
 // -----------------update once every 10 seconds (could also be e.g. every mouseClick)
 
 
-updating = 0
+updating = 0;
     if ((millis() - lastUpdate) > 5000){
-        updating = 1
+        updating = 1;
         println("  -  -  -  ready to POST average of "+averageCounter+" values  ...");
         
         for (int i = 0; i < 6; i++)
@@ -114,7 +120,7 @@ updating = 0
         for (int i = 0; i < 6; i++)
           averageValues[i] = Math.round(averageValues[i] * 100) / 100.0f;        // round the Value to 2 floatingpoints
 
-        println("calculated averages           "+averageValues[0]+",   "+averageValues[1]+",   "+averageValues[2]+",   "+averageValues[3]+",   "+averageValues[4]+",   "+averageValues[5]+"  ...");
+        println(" ready to POST average of "+averageCounter+" averaged values        "+averageValues[0]+",   "+averageValues[1]+",   "+averageValues[2]+",   "+averageValues[3]+",   "+averageValues[4]+",   "+averageValues[5]+"  ...");
 
         dOut.update(0, averageValues[0]);                                        // update the datastream
         dOut.update(1, averageValues[1]);
